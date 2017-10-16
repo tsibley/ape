@@ -169,13 +169,16 @@ drop.tip <-
     ## the tips may not be sorted in increasing order in the
     ## 2nd col of edge, so no need to reorder $tip.label
     phy$edge[TERMS, 2] <- rank(phy$edge[TERMS, 2])
-    phy$tip.label <- phy$tip.label[-tip]
+    if (length(tip) > 0)
+        phy$tip.label <- phy$tip.label[-tip]
 
     ## make new tip labels if necessary:
     if (subtree || !trim.internal) {
         ## get the numbers of the nodes that become tips:
         node2tip <- oldNo.ofNewTips[oldNo.ofNewTips > Ntip]
-        new.tip.label <- if (subtree) {
+        new.tip.label <- if (length(node2tip) == 0) {
+            character(0)
+        } else if (subtree) {
             paste("[", N[node2tip], "_tips]", sep = "")
         } else {
             if (is.null(phy$node.label)) rep("NA", length(node2tip))
